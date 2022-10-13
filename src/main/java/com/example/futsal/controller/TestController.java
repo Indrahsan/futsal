@@ -5,12 +5,18 @@ import com.example.futsal.payload.request.LoginRequest;
 import com.example.futsal.security.service.UserDetailsServiceImpl;
 import com.example.futsal.utils.Global;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -22,6 +28,9 @@ public class TestController {
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    RestTemplateBuilder restTemplateBuilder;
 
 
     @GetMapping("/all")
@@ -54,4 +63,19 @@ public class TestController {
         return global.Response(user, 0, "Berhasil");
 
     }
+
+//    @GetMapping(value ="/consumeApi")
+//    public ResponseEntity<?> consume() {
+//        String username = "webgodigi";
+//        String password = "";
+//        String url = "https://godigi.co.id:8080/contents";
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBasicAuth(username, password);
+//
+//        HttpEntity<String> request = new HttpEntity<String>(headers);
+//        ResponseEntity<Map> response = restTemplateBuilder.build().exchange(url, HttpMethod.GET, request, Map.class);
+//
+//        return global.Response(response.getBody().get("data"), 0, "Berhasil consume api");
+//
+//    }
 }
