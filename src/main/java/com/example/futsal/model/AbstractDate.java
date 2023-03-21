@@ -20,13 +20,13 @@ import java.util.Date;
 )
 public abstract class AbstractDate implements Serializable {
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "Asia/Jakarta")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreationTimestamp
     private Date created_date;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "Asia/Jakarta")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deleted_date", nullable = true)
     private Date deleted_date;
