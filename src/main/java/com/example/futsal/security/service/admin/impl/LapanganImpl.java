@@ -29,32 +29,64 @@ public class LapanganImpl implements LapanganService {
     public ResponseEntity<Map> CreateLap(Lapangan lapangan, Principal principal) {
         User user =  global.getUserIdToken(principal, userDetailsService);
         Lapangan findLapanganAndCreatedBy = lapanganRepository.findLapanganAndCreatedBy(lapangan.getNamaLapangan(), user);
-        if (findLapanganAndCreatedBy != null) {
-            return global.Response(null, 20, "the field name is already taken on your account!");
-        }
-        Lapangan obj = new Lapangan();
-        obj.setNamaLapangan(lapangan.getNamaLapangan());
-        obj.setId_user(user);
+        try {
+            if (findLapanganAndCreatedBy != null) {
+                return global.Response(null, 20, "the field name is already taken on your account!");
+            }
+            Lapangan obj = new Lapangan();
+            obj.setNamaLapangan(lapangan.getNamaLapangan());
+            obj.setId_user(user);
 
-        Lapangan lap = lapanganRepository.save(obj);
-        return global.Response(lap, 0, "succesful add field!");
+            Lapangan lap = lapanganRepository.save(obj);
+            return global.Response(lap, 0, "succesful add field!");
+        } catch (Exception e) {
+            return global.Response(null, 500, ""+e);
+        }
+
     }
 
     @Override
     public ResponseEntity<Map> DelLap(Long idLap, Principal principal) {
         Lapangan lapangan = lapanganRepository.findLapanganByID(idLap);
         User user =  global.getUserIdToken(principal, userDetailsService);
+        try {
+            if (lapangan == null) {
+                return global.Response(null, 21, "the field not found!");
+            }
 
-        if (lapangan.getId_user() != user){
-            return global.Response(null, 21, "you don't have access to delete field!");
+            if (lapangan.getId_user() != user){
+                return global.Response(null, 21, "you don't have access to delete field!");
+            }
+
+            lapangan.setDeleted_date(new Date());
+
+            Lapangan obj = lapanganRepository.save(lapangan);
+            return global.Response(obj, 0, "Delete Success!");
+        } catch (Exception e) {
+            return global.Response(null, 500, ""+e);
         }
 
-        if (lapangan == null) {
-            return global.Response(null, 21, "the field not found!");
-        }
-        lapangan.setDeleted_date(new Date());
+    }
 
-        Lapangan obj = lapanganRepository.save(lapangan);
-        return global.Response(obj, 0, "Delete Success!");
+    @Override
+    public ResponseEntity<Map> EditLap(Long idLap, Principal principal, Lapangan obj) {
+        Lapangan lapangan = lapanganRepository.findLapanganByID(idLap);
+        User user =  global.getUserIdToken(principal, userDetailsService);
+
+        try {
+            if (lapangan == null) {
+                return global.Response(null, 21, "the field not found!");
+            }
+            if (lapangan.getId_user() != user){
+                return global.Response(null, 21, "you don't have access to edit this field!");
+            }
+
+            lapangan.setNamaLapangan(obj.getNamaLapangan());
+
+            Lapangan update = lapanganRepository.save(lapangan);
+            return global.Response(update, 0, "success update!");
+        } catch (Exception e) {
+            return global.Response(null, 500, ""+e);
+        }
     }
 }

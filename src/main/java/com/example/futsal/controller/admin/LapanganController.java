@@ -29,4 +29,10 @@ public class LapanganController {
     public ResponseEntity<Map> delete(@PathVariable(value = "id_lapangan") Long id_lapangan, Principal principal) {
         return lapanganService.DelLap(id_lapangan, principal);
     }
+
+    @PutMapping("/edit/{id_lapangan}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map> edit (@PathVariable(value = "id_lapangan") Long id_lapangan, Principal principal, @Valid @RequestBody Lapangan obj) {
+        return lapanganService.EditLap(id_lapangan, principal, obj);
+    }
 }
