@@ -28,5 +28,4 @@ public class Lapangan extends AbstractDate implements Serializable {
     @ManyToOne
     @JoinColumn(name = "created_by")
     private User id_user;
-
 }
