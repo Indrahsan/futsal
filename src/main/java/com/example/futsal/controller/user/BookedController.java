@@ -21,7 +21,7 @@ public class BookedController {
 
     @PostMapping("/booked/{id_lapangan}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Map> add (@Valid @RequestBody Booked booked, Principal principal, @PathVariable(value = "id_lapangan") Long idLap) {
-        return bookedService.BookedLap(idLap, principal, booked);
+    public ResponseEntity<Map> add (@PathVariable(value = "id_lapangan") Long id_lapangan ,@Valid @RequestBody Booked booked, Principal principal) {
+        return bookedService.BookedLap(id_lapangan, principal, booked);
     }
 }

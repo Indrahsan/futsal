@@ -36,6 +36,7 @@ public class BookedImpl implements BookedService {
     public ResponseEntity<Map> BookedLap(Long idLap, Principal principal, Booked obj) {
         User user = global.getUserIdToken(principal, userDetailsService);
         Lapangan lapangan = lapanganRepository.findLapanganByID(idLap);
+        Booked check = bookedRepository.findLapanganAndBookedTime(lapangan, obj.getTime_booked());
 
         if (user == null) {
             return global.Response(null, 20, "User not found");
@@ -43,15 +44,16 @@ public class BookedImpl implements BookedService {
         if (lapangan == null){
             return global.Response(null, 20, "Field not found");
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        LocalDateTime dateTime = LocalDateTime.parse((CharSequence) obj.getTime_booked(), formatter);
-        String isostring = dateTime.toString();
+        if (check != null) {
+            return global.Response(null, 20, "Field Not Available!");
+        }
+
 
         Booked booked = new Booked();
 
         booked.setLapangan(lapangan);
         booked.setUser(user);
-        booked.setTime_booked(isostring);
+        booked.setTime_booked(obj.getTime_booked());
 
         bookedRepository.save(booked);
         return global.Response(booked, 0, "success booked!");

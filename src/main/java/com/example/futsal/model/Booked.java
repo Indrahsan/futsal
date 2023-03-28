@@ -1,5 +1,6 @@
 package com.example.futsal.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,7 +28,7 @@ public class Booked extends AbstractDate implements Serializable {
     @JoinColumn(name = "booked_by")
     private User user;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "time_booked")
     private Date time_booked;
 }
