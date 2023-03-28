@@ -34,28 +34,32 @@ public class BookedImpl implements BookedService {
 
     @Override
     public ResponseEntity<Map> BookedLap(Long idLap, Principal principal, Booked obj) {
-        User user = global.getUserIdToken(principal, userDetailsService);
-        Lapangan lapangan = lapanganRepository.findLapanganByID(idLap);
-        Booked check = bookedRepository.findLapanganAndBookedTime(lapangan, obj.getTime_booked());
+        try {
+            User user = global.getUserIdToken(principal, userDetailsService);
+            Lapangan lapangan = lapanganRepository.findLapanganByID(idLap);
+            Booked check = bookedRepository.findLapanganAndBookedTime(lapangan, obj.getTime_booked());
 
-        if (user == null) {
-            return global.Response(null, 20, "User not found");
+            if (user == null) {
+                return global.Response(null, 20, "User not found");
+            }
+            if (lapangan == null){
+                return global.Response(null, 20, "Field not found");
+            }
+            if (check != null) {
+                return global.Response(null, 20, "Field Not Available!");
+            }
+
+
+            Booked booked = new Booked();
+
+            booked.setLapangan(lapangan);
+            booked.setUser(user);
+            booked.setTime_booked(obj.getTime_booked());
+
+            bookedRepository.save(booked);
+            return global.Response(booked, 0, "success booked!");
+        } catch (Exception e) {
+            return global.Response(null, 500, ""+e);
         }
-        if (lapangan == null){
-            return global.Response(null, 20, "Field not found");
-        }
-        if (check != null) {
-            return global.Response(null, 20, "Field Not Available!");
-        }
-
-
-        Booked booked = new Booked();
-
-        booked.setLapangan(lapangan);
-        booked.setUser(user);
-        booked.setTime_booked(obj.getTime_booked());
-
-        bookedRepository.save(booked);
-        return global.Response(booked, 0, "success booked!");
     }
 }
